@@ -1,8 +1,9 @@
 import { Grid } from '@mui/material'
 
-import { LoginBanner } from '../../components/LoginBanner'
+import { LoginBanner } from './components/LoginBanner'
 
 import { Container } from './styles'
+import { LoginForm } from './components/LoginForm'
 
 export function Login() {
   return (
@@ -11,7 +12,9 @@ export function Login() {
         <Grid size={6}>
           <LoginBanner />
         </Grid>
-        <Grid size={6}></Grid>
+        <Grid size={6}>
+          <LoginForm />
+        </Grid>
       </Grid>
     </Container>
   )

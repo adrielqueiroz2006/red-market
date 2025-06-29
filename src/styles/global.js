@@ -20,5 +20,7 @@ export const GlobalStyle = createGlobalStyle`
     font-family: 'Poppins', sans-serif;
     font-weight: 400;
     font-size: 1rem;
+
+    border: none;
   }
 `
