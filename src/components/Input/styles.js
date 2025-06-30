@@ -23,6 +23,8 @@ export const InputWrapper = styled.input`
 
   font-size: 1rem;
 
+  background-color: ${(props) => props.theme['gray-100']};
+
   &::placeholder {
     color: ${(props) => props.theme['gray-600']};
   }
