@@ -77,3 +77,10 @@ export const NavigationTitle = styled.h1`
   font-weight: bold;
   color: ${(props) => props.theme.white};
 `
+
+export const HeaderTitle = styled.h1`
+  font-size: 2rem;
+  font-weight: bold;
+  font-family: 'Oleo Script Swash Caps', system-ui;
+  color: ${(props) => props.theme.white};
+`

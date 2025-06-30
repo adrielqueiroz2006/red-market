@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import {
   GreetingsText,
+  HeaderTitle,
   IconContainer,
   ItemWrapper,
   NavigationTitle,
@@ -25,6 +26,7 @@ import {
   PackageIcon,
   SignOutIcon,
   UsersIcon,
+  List as ListIcon,
 } from '@phosphor-icons/react'
 
 import { useNavigate } from 'react-router-dom'
@@ -246,15 +248,19 @@ export function MainLayout({ children, selectedPage = 'Entrada' }) {
   )
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', fontFamily: 'Poppins, sans-serif' }}>
       <CssBaseline />
 
       <AppBar
+        style={{ background: theme['red-500'] }}
         position="fixed"
         sx={{
           display: { sm: 'none' },
           width: { sm: `calc(100% - ${sidebarWidth}px)` },
           ml: { sm: `${sidebarWidth}px` },
+          '& .MuiDrawer-paper': {
+            backgroundColor: 'red',
+          },
         }}
       >
         <Toolbar>
@@ -263,10 +269,10 @@ export function MainLayout({ children, selectedPage = 'Entrada' }) {
             edge="start"
             onClick={handleDrawerToggle}
             sx={{ mr: 2, display: { sm: 'none' } }}
-          ></IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Responsive drawer
-          </Typography>
+          >
+            <ListIcon />
+          </IconButton>
+          <HeaderTitle>Red Market</HeaderTitle>
         </Toolbar>
       </AppBar>
       <Box
