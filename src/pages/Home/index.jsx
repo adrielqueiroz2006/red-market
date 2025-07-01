@@ -17,7 +17,15 @@ export function Home() {
     <MainLayout
       selectedPage="Entrada"
       children={
-        <Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+          }}
+        >
           <GreetingsText>
             Bem-vindo ao&nbsp;
             <BrandWrapper>
