@@ -15,7 +15,7 @@ export function AddNewData({ onClose }) {
         gap: '50px',
       }}
     >
-      <Title>Adicionar novo Cliente</Title>
+      <Title>Adicionar novo cliente</Title>
 
       <Box>
         <Grid
@@ -74,7 +74,7 @@ export function AddNewData({ onClose }) {
           Color="Black"
           onClick={() => onClose()}
         />
-        <Button />
+        <Button Icon="PencilSimple" Text="Salvar alterações" />
       </Box>
     </Box>
   )

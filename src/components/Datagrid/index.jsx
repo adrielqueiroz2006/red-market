@@ -6,19 +6,26 @@ import { Button } from '../Button'
 
 import { Container, DataTable, Title } from './styles'
 
-import { ActionButton } from './components/ActionButton'
 import { useTheme } from 'styled-components'
+
+import { ActionButton } from './components/ActionButton'
+
 import { AddNewData } from '../AddNewData'
 import { DeleteData } from '../DeleteData'
+import { EditData } from '../EditData'
 
 export function Datagrid() {
   const [open, setOpen] = useState(false)
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
-
   const [openDelete, setOpenDelete] = useState(false)
+  const [openEdit, setOpenEdit] = useState(false)
+
+  const handleOpen = () => setOpen(true)
   const handleOpenDelete = () => setOpenDelete(true)
+  const handleOpenEdit = () => setOpenEdit(true)
+
+  const handleClose = () => setOpen(false)
   const handleCloseDelete = () => setOpenDelete(false)
+  const handleCloseEdit = () => setOpenEdit(false)
 
   const theme = useTheme()
 
@@ -66,7 +73,10 @@ export function Datagrid() {
                       }}
                     >
                       <ActionButton Icon={'Trash'} onClick={handleOpenDelete} />
-                      <ActionButton Icon={'PencilSimple'} />
+                      <ActionButton
+                        Icon={'PencilSimple'}
+                        onClick={handleOpenEdit}
+                      />
                     </div>
                     <div>Adriel Queiroz</div>
                   </div>
@@ -102,6 +112,31 @@ export function Datagrid() {
           }}
         >
           <AddNewData onClose={handleClose} />
+        </Box>
+      </Modal>
+
+      <Modal
+        open={openEdit}
+        onClose={handleCloseEdit}
+        style={{
+          backdropFilter: 'blur(2px)',
+          backgroundColor: 'rgb(0, 0, 0, 0.65)',
+        }}
+      >
+        <Box
+          sx={{
+            fontFamily: 'Poppins, sans-serif',
+            borderRadius: '8px',
+            padding: '28px 28px 16px',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            maxWidth: '838px',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: theme.white,
+          }}
+        >
+          <EditData onClose={handleCloseEdit} />
         </Box>
       </Modal>
 
