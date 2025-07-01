@@ -9,10 +9,10 @@ export function Login() {
   return (
     <Container>
       <Grid container spacing={1.25} sx={{ height: '100%' }}>
-        <Grid size={6}>
+        <Grid size={{ sm: 6, xs: 0 }}>
           <LoginBanner />
         </Grid>
-        <Grid size={6}>
+        <Grid size={{ sm: 6, xs: 12 }}>
           <LoginForm />
         </Grid>
       </Grid>

@@ -22,6 +22,15 @@ export const Title = styled.h1`
   font-size: 48px;
 `
 
+export const ErrorMessage = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  font-size: 18px;
+  color: ${(props) => props.theme['red-500']};
+`
+
 export const Form = styled.div`
   display: flex;
   flex-direction: column;
@@ -56,4 +65,10 @@ export const SubmitButton = styled.button`
   color: ${(props) => props.theme.white};
 
   cursor: pointer;
+
+  transition: background 0.3s;
+
+  &:hover {
+    background-color: ${(props) => props.theme['red-600']};
+  }
 `
