@@ -5,37 +5,40 @@ import { Button } from '../../components/Button'
 
 import { Box } from '@mui/material'
 
+import { handleExport } from '../../utils/exportDatagrid'
+
 export function Products() {
+  const table = 'Produtos'
+
+  const fields = [
+    {
+      name: 'Nome',
+      icon: 'NotePencil',
+      text: 'Digite nome do produto',
+    },
+    {
+      name: 'Preço',
+      icon: 'MoneyWavy',
+      text: 'Digite o preço do produto',
+    },
+    {
+      name: 'Categoria',
+      icon: 'List',
+      text: 'Digite a categoria do produto',
+    },
+    {
+      name: 'Estoque',
+      icon: 'Package',
+      text: 'Digite o estoque do produto',
+    },
+  ]
+
   return (
     <MainLayout
-      selectedPage="Produtos"
+      selectedPage={table}
       children={
         <>
-          <Datagrid
-            tableName={'Produtos'}
-            fieldsArray={[
-              {
-                name: 'Nome',
-                icon: 'NotePencil',
-                text: 'Digite nome do produto',
-              },
-              {
-                name: 'Preço',
-                icon: 'MoneyWavy',
-                text: 'Digite o preço do produto',
-              },
-              {
-                name: 'Categoria',
-                icon: 'List',
-                text: 'Digite a categoria do produto',
-              },
-              {
-                name: 'Estoque',
-                icon: 'Package',
-                text: 'Digite o estoque do produto',
-              },
-            ]}
-          />
+          <Datagrid tableName={table} fieldsArray={fields} />
 
           <Box
             sx={{
@@ -45,11 +48,17 @@ export function Products() {
               marginTop: '4rem',
             }}
           >
-            <Button Icon="FilePdf" Text="Exportar PDF" Size={232} />
+            <Button
+              Icon="FilePdf"
+              Text="Exportar PDF"
+              Size={232}
+              onClick={() => handleExport(table, fields, 'pdf')}
+            />
             <Button
               Icon="MicrosoftExcelLogo"
               Text="Exportar Excel"
               Size={232}
+              onClick={() => handleExport(table, fields, 'excel')}
             />
           </Box>
         </>

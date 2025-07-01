@@ -14,11 +14,15 @@
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^7.1.2",
     "@phosphor-icons/react": "^2.1.10",
+    "file-saver": "^2.0.5",
     "firebase": "^11.10.0",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.28",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.3",
-    "styled-components": "^6.1.19"
+    "styled-components": "^6.1.19",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",

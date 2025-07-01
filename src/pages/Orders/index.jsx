@@ -5,35 +5,38 @@ import { Button } from '../../components/Button'
 
 import { Box } from '@mui/material'
 
+import { handleExport } from '../../utils/exportDatagrid'
+
 export function Orders() {
+  const table = 'Pedidos'
+
+  const fields = [
+    {
+      name: 'Produtos',
+      collectionName: 'Produtos',
+    },
+    {
+      name: 'Clientes',
+      collectionName: 'Clientes',
+    },
+    {
+      name: 'Quantidade',
+      icon: 'Hash',
+      text: 'Digite a quantidade',
+    },
+    {
+      name: 'Valor',
+      icon: 'MoneyWavy',
+      text: 'Digite telefone do cliente',
+    },
+  ]
+
   return (
     <MainLayout
-      selectedPage="Pedidos"
+      selectedPage={table}
       children={
         <>
-          <Datagrid
-            tableName={'Pedidos'}
-            fieldsArray={[
-              {
-                name: 'Produtos',
-                collectionName: 'Produtos',
-              },
-              {
-                name: 'Clientes',
-                collectionName: 'Clientes',
-              },
-              {
-                name: 'Quantidade',
-                icon: 'Hash',
-                text: 'Digite a quantidade',
-              },
-              {
-                name: 'Valor',
-                icon: 'MoneyWavy',
-                text: 'Digite telefone do cliente',
-              },
-            ]}
-          />
+          <Datagrid tableName={'Pedidos'} fieldsArray={fields} />
 
           <Box
             sx={{
@@ -43,11 +46,17 @@ export function Orders() {
               marginTop: '4rem',
             }}
           >
-            <Button Icon="FilePdf" Text="Exportar PDF" Size={232} />
+            <Button
+              Icon="FilePdf"
+              Text="Exportar PDF"
+              Size={232}
+              onClick={() => handleExport(table, fields, 'pdf')}
+            />
             <Button
               Icon="MicrosoftExcelLogo"
               Text="Exportar Excel"
               Size={232}
+              onClick={() => handleExport(table, fields, 'excel')}
             />
           </Box>
         </>

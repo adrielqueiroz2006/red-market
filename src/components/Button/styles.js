@@ -16,7 +16,7 @@ export const Container = styled.button`
 
   cursor: pointer;
 
-  transition: background 0.1s;
+  transition: background 0.3s;
 
   &:hover {
     background: ${(props) => props.theme['red-600']};

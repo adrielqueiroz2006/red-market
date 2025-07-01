@@ -10,19 +10,19 @@ export function Button({
   Color = 'Red',
   ...rest
 }) {
-  const InputIcon = PhosporIcons[Icon]
+  const ButtonIcon = PhosporIcons[Icon]
 
   const theme = useTheme()
 
   return (
     <Container
+      {...rest}
       style={{
         width: `${Size}px`,
         backgroundColor: Color === 'Red' ? theme['red-500'] : theme['gray-800'],
       }}
-      {...rest}
     >
-      <InputIcon size={20} color={theme.white} />
+      <ButtonIcon size={20} color={theme.white} />
       <ButtonTitle>{Text}</ButtonTitle>
     </Container>
   )
