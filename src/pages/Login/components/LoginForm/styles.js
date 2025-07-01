@@ -5,8 +5,6 @@ export const Container = styled.div`
 
   display: flex;
   align-items: center;
-
-  padding-left: 8.33rem;
 `
 
 export const FormWrapper = styled.form`
