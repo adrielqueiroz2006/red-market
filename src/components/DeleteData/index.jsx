@@ -7,8 +7,17 @@ import { WarningCircleIcon } from '@phosphor-icons/react'
 
 import { useTheme } from 'styled-components'
 
-export function DeleteData({ onClose }) {
+import { deleteDoc, doc } from 'firebase/firestore'
+import { db } from '../../services/firebaseConfig'
+
+export function DeleteData({ onClose, item, firstField, table }) {
   const theme = useTheme()
+
+  async function handleDelete() {
+    if (!item?.id || !table) return
+    await deleteDoc(doc(db, table, item.id))
+    onClose()
+  }
 
   return (
     <Box
@@ -35,9 +44,10 @@ export function DeleteData({ onClose }) {
           </Grid>
           <Grid size={12}>
             <Subtitle>
-              Tem certeza que deseja excluir o cliente
+              Tem certeza que deseja excluir o{' '}
+              {table.toLowerCase().slice(0, table.length - 1)}
               <br />
-              <strong>Adriel Queiroz?</strong>
+              <strong>{item?.[firstField] || 'Este item'}?</strong>
             </Subtitle>
           </Grid>
         </Grid>
@@ -57,7 +67,13 @@ export function DeleteData({ onClose }) {
           Color="Black"
           onClick={() => onClose()}
         />
-        <Button Icon="Trash" Text="Sim, excluir cliente!" />
+        <Button
+          Icon="Trash"
+          Text={`Sim, excluir ${table
+            .toLowerCase()
+            .slice(0, table.length - 1)}!`}
+          onClick={handleDelete}
+        />
       </Box>
     </Box>
   )

@@ -72,7 +72,7 @@ export function Datagrid({ fieldsArray, tableName }) {
       <Container>
         <Grid container rowSpacing={1} sx={{ marginInline: 2 }}>
           <Grid size={12}>
-            <Title>Clientes</Title>
+            <Title>{tableName}</Title>
           </Grid>
 
           <Grid
@@ -105,14 +105,14 @@ export function Datagrid({ fieldsArray, tableName }) {
                       key={`${field.name}-asc`}
                       value={`${field.name}-asc`}
                     >
-                      {field.name === 'CPFCNPJ' ? 'CPF/CNPJ' : field.name}
+                      {field.name === 'CPFCNPJ' ? 'CPF/CNPJ' : field.name} {''}
                       (crescente)
                     </option>
                     <option
                       key={`${field.name}-desc`}
                       value={`${field.name}-desc`}
                     >
-                      {field.name === 'CPFCNPJ' ? 'CPF/CNPJ' : field.name}
+                      {field.name === 'CPFCNPJ' ? 'CPF/CNPJ' : field.name} {''}
                       (decrescente)
                     </option>
                   </>

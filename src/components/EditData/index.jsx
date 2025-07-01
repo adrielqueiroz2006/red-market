@@ -1,10 +1,49 @@
+import { useEffect, useState } from 'react'
+
 import { Box, Grid } from '@mui/material'
 
 import { InputTitle, Title } from './styles'
+
 import { Button } from '../Button'
 import { Input } from '../Input'
 
-export function EditData({ onClose }) {
+import { doc, updateDoc } from 'firebase/firestore'
+import { db } from '../../services/firebaseConfig'
+
+export function EditData({ onClose, item, fields = [], table }) {
+  const [formData, setFormData] = useState({})
+
+  useEffect(() => {
+    if (item) {
+      setFormData(() =>
+        fields.reduce((acc, field) => {
+          acc[field.name] = item[field.name] || ''
+          return acc
+        }, {})
+      )
+    }
+  }, [item, fields])
+
+  function handleChange(e, fieldName) {
+    setFormData((prev) => ({
+      ...prev,
+      [fieldName]: e.target.value,
+    }))
+  }
+
+  async function handleSave() {
+    if (!item?.id) return
+
+    const itemDocRef = doc(db, table, item.id)
+
+    try {
+      await updateDoc(itemDocRef, formData)
+      onClose()
+    } catch (error) {
+      console.error('Erro ao atualizar dados:', error)
+    }
+  }
+
   return (
     <Box
       height={'100%'}
@@ -15,7 +54,7 @@ export function EditData({ onClose }) {
         gap: '50px',
       }}
     >
-      <Title>Editar cliente</Title>
+      <Title>Editar {table.toLowerCase().slice(0, table.length - 1)}</Title>
 
       <Box>
         <Grid
@@ -23,40 +62,23 @@ export function EditData({ onClose }) {
           rowSpacing={{ md: 8.5, sm: 2.5, xs: 2.5 }}
           columnSpacing={{ md: 8.5, sm: 2.5, xs: 2.5 }}
         >
-          <Grid
-            size={{ sm: 6, xs: 12 }}
-            sx={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
-          >
-            <InputTitle>Nome</InputTitle>
-            <Input Icon="User" Text="Digite o nome do cliente" />
-          </Grid>
-
-          <Grid
-            size={{ sm: 6, xs: 12 }}
-            sx={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
-          >
-            <InputTitle>CPF/CNPJ</InputTitle>
-            <Input
-              Icon="IdentificationCard"
-              Text="Digite o CPF ou CNPJ do cliente"
-            />
-          </Grid>
-
-          <Grid
-            size={{ sm: 6, xs: 12 }}
-            sx={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
-          >
-            <InputTitle>Endereço</InputTitle>
-            <Input Icon="House" Text="Digite o endereço do cliente" />
-          </Grid>
-
-          <Grid
-            size={{ sm: 6, xs: 12 }}
-            sx={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
-          >
-            <InputTitle>Telefone</InputTitle>
-            <Input Icon="Phone" Text="Digite o telefone do cliente" />
-          </Grid>
+          {fields.map((field) => (
+            <Grid
+              key={field.name}
+              item
+              xs={12}
+              sm={6}
+              sx={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
+            >
+              <InputTitle>{field.name}</InputTitle>
+              <Input
+                Icon={field.icon}
+                Text={field.text}
+                value={formData[field.name]}
+                onChange={(e) => handleChange(e, field.name)}
+              />
+            </Grid>
+          ))}
         </Grid>
       </Box>
 
@@ -74,7 +96,7 @@ export function EditData({ onClose }) {
           Color="Black"
           onClick={() => onClose()}
         />
-        <Button />
+        <Button Text="Salvar alterações" onClick={handleSave} />
       </Box>
     </Box>
   )
