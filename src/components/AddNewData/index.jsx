@@ -20,8 +20,8 @@ export function AddNewData({ onClose }) {
       <Box>
         <Grid
           container
-          rowSpacing={{ md: 8.5, sm: 2.5 }}
-          columnSpacing={{ md: 8.5, sm: 2.5 }}
+          rowSpacing={{ md: 8.5, sm: 2.5, xs: 2.5 }}
+          columnSpacing={{ md: 8.5, sm: 2.5, xs: 2.5 }}
         >
           <Grid
             size={{ sm: 6, xs: 12 }}

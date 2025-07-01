@@ -9,11 +9,16 @@ import { Container, DataTable, Title } from './styles'
 import { ActionButton } from './components/ActionButton'
 import { useTheme } from 'styled-components'
 import { AddNewData } from '../AddNewData'
+import { DeleteData } from '../DeleteData'
 
 export function Datagrid() {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+
+  const [openDelete, setOpenDelete] = useState(false)
+  const handleOpenDelete = () => setOpenDelete(true)
+  const handleCloseDelete = () => setOpenDelete(false)
 
   const theme = useTheme()
 
@@ -60,7 +65,7 @@ export function Datagrid() {
                         gap: '10px',
                       }}
                     >
-                      <ActionButton Icon={'Trash'} />
+                      <ActionButton Icon={'Trash'} onClick={handleOpenDelete} />
                       <ActionButton Icon={'PencilSimple'} />
                     </div>
                     <div>Adriel Queiroz</div>
@@ -74,6 +79,7 @@ export function Datagrid() {
           </table>
         </DataTable>
       </Container>
+
       <Modal
         open={open}
         onClose={handleClose}
@@ -96,6 +102,32 @@ export function Datagrid() {
           }}
         >
           <AddNewData onClose={handleClose} />
+        </Box>
+      </Modal>
+
+      <Modal
+        open={openDelete}
+        onClose={handleCloseDelete}
+        style={{
+          backdropFilter: 'blur(2px)',
+          backgroundColor: 'rgb(0, 0, 0, 0.65)',
+        }}
+      >
+        <Box
+          sx={{
+            fontFamily: 'Poppins, sans-serif',
+            borderRadius: '8px',
+            padding: '28px 28px 16px',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            maxWidth: '708px',
+            width: '100%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: theme.white,
+          }}
+        >
+          <DeleteData onClose={handleCloseDelete} />
         </Box>
       </Modal>
     </>
