@@ -26,13 +26,16 @@ import {
   PackageIcon,
   SignOutIcon,
   UsersIcon,
-  List as ListIcon,
+  ListIcon,
 } from '@phosphor-icons/react'
 
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from 'styled-components'
 
 import ProfilePic from '../../assets/profile.jpg'
+
+import { signOut } from 'firebase/auth'
+import { auth } from '../../services/firebaseConfig'
 
 const sidebarWidth = 360
 
@@ -57,6 +60,10 @@ export function MainLayout({ children, selectedPage = 'Entrada' }) {
     if (!isClosing) {
       setMobileOpen(!mobileOpen)
     }
+  }
+
+  function handleLogout() {
+    signOut(auth)
   }
 
   const sidebar = (
@@ -232,7 +239,7 @@ export function MainLayout({ children, selectedPage = 'Entrada' }) {
       </div>
 
       <List>
-        <ItemWrapper>
+        <ItemWrapper onClick={handleLogout}>
           <Box>
             <IconContainer>
               <SignOutIcon size={40} color={theme.white} />
@@ -331,12 +338,11 @@ export function MainLayout({ children, selectedPage = 'Entrada' }) {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
+          p: 1.5,
           width: { sm: `calc(100% - ${120}px)` },
           minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
           alignItems: 'center',
         }}
       >
