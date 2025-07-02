@@ -113,7 +113,13 @@ export function AddNewData({ onClose, fields = [], table }) {
             >
               {field.collectionName ? (
                 <>
-                  <InputTitle>{field.name}</InputTitle>
+                  <InputTitle>
+                    {field.name === 'Produtos'
+                      ? 'Produto'
+                      : field.name === 'Clientes'
+                      ? 'Cliente'
+                      : field.name}
+                  </InputTitle>
                   <InputSelect
                     value={formData[field.name]}
                     onChange={(e) => handleChange(e, field.name)}

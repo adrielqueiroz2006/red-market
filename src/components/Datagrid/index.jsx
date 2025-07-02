@@ -129,7 +129,13 @@ export function Datagrid({ fieldsArray, tableName }) {
                 <th></th>
                 {fieldsArray.map((field) => (
                   <th key={field.name}>
-                    {field.name === 'CPFCNPJ' ? 'CPF/CNPJ' : field.name}
+                    {field.name === 'CPFCNPJ'
+                      ? 'CPF/CNPJ'
+                      : field.name === 'Produtos'
+                      ? 'Produto'
+                      : field.name === 'Clientes'
+                      ? 'Cliente'
+                      : field.name}
                   </th>
                 ))}
               </tr>

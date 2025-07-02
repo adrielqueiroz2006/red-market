@@ -66,8 +66,7 @@ export function EditData({ onClose, item, fields = [], table }) {
             <Grid
               key={field.name}
               item
-              xs={12}
-              sm={6}
+              size={{ sm: 6, xs: 12 }}
               sx={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
             >
               <InputTitle>{field.name}</InputTitle>
