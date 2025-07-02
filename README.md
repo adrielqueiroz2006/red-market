@@ -66,6 +66,9 @@ Para fazer o layout deste projeto utilizei o Figma, conforme exigido pela empres
    ```bash
    npm start
    ```
+4. Logue com os dados:
+   - Usuário: `red-market@gmail.com`
+   - Senha: `redmarket`
 
 ## 🙋 Autor
 
