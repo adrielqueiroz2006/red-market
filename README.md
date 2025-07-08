@@ -30,6 +30,15 @@ Veja abaixo algumas imagens do projeto em funcionamento.
 <p align="center">
     <img src=".github/preview3.png" alt="Preview 3" width="600"/>
 </p>
+<p align="center">
+    <img src=".github/preview4.png" alt="Preview 4" width="600"/>
+</p>
+<p align="center">
+    <img src=".github/preview5.png" alt="Preview 5" width="600"/>
+</p>
+<p align="center">
+    <img src=".github/preview6.png" alt="Preview 6" width="600"/>
+</p>
 
 ## 🛒 Funcionalidades
 
