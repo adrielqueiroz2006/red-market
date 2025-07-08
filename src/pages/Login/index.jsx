@@ -1,11 +1,25 @@
+import { useEffect } from 'react'
+
 import { Box, Grid } from '@mui/material'
 
 import { LoginBanner } from './components/LoginBanner'
-
-import { Container } from './styles'
 import { LoginForm } from './components/LoginForm'
 
+import { Container } from './styles'
+
+import { auth } from '../../services/firebaseConfig'
+
+import { useNavigate } from 'react-router-dom'
+
 export function Login() {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (auth) {
+      navigate('/home')
+    }
+  }, [])
+
   return (
     <Container>
       <Grid container spacing={1.25} sx={{ height: '100%' }}>
