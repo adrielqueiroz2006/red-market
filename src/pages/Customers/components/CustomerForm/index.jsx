@@ -140,7 +140,6 @@ export function CustomerForm({ option, onClose, onAction, item }) {
               Text="Digite o telefone do cliente"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              minLength={11}
               maxLength={11}
               min={0}
               type="number"

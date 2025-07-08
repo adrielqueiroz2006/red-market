@@ -72,6 +72,7 @@ export function LoginForm() {
               Icon="LockSimple"
               Text="Digite as sua senha"
               ref={passwordRef}
+              type="password"
             />
           </InputWrapper>
 

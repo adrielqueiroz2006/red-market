@@ -89,14 +89,14 @@ export function OrderForm({ option, onClose, onAction, item }) {
   }, [])
 
   useEffect(() => {
-    const selectedProductExists = products.some(
-      (product) => product.id === item.productId
-    )
-    const selectedCustomerExists = customers.some(
-      (customer) => customer.id === item.customerId
-    )
-
     if (option === 'edit' && item) {
+      const selectedProductExists = products.some(
+        (product) => product.id === item.productId
+      )
+      const selectedCustomerExists = customers.some(
+        (customer) => customer.id === item.customerId
+      )
+
       setProductId(selectedProductExists ? item.productId : '')
       setCustomerId(selectedCustomerExists ? item.customerId : '')
       setAmount(item.amount || '')
