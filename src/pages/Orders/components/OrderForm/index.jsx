@@ -62,14 +62,13 @@ export function OrderForm({ option, onClose, onAction, item }) {
       (customer) => customer.id === customerId
     )
 
-    const productName = selectedProduct.name
-    const customerName = selectedCustomer.name
-
     if (amount > selectedProduct.inventory) {
       alert('Não há estoque suficiente para esse produto!')
       return
     }
 
+    const productName = selectedProduct.name
+    const customerName = selectedCustomer.name
     const value = (Number(amount) * Number(selectedProduct.price)).toFixed(2)
 
     onAction(
@@ -90,12 +89,19 @@ export function OrderForm({ option, onClose, onAction, item }) {
   }, [])
 
   useEffect(() => {
+    const selectedProductExists = products.some(
+      (product) => product.id === item.productId
+    )
+    const selectedCustomerExists = customers.some(
+      (customer) => customer.id === item.customerId
+    )
+
     if (option === 'edit' && item) {
-      setProductId(item.productId || '')
-      setCustomerId(item.customerId || '')
+      setProductId(selectedProductExists ? item.productId : '')
+      setCustomerId(selectedCustomerExists ? item.customerId : '')
       setAmount(item.amount || '')
     }
-  }, [option, item])
+  }, [option, item, products, customers])
 
   return (
     <Box

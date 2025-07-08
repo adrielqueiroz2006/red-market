@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Box, Grid, Modal } from '@mui/material'
 
@@ -54,7 +54,12 @@ export function Datagrid({
   const theme = useTheme()
 
   useEffect(() => {
-    if (!sortField || !data?.length) return
+    if (!sortField) return
+
+    if (!data?.length) {
+      setSortedData([])
+      return
+    }
 
     const sorted = [...data].sort((a, b) => {
       let valueA = a[sortField]
@@ -115,16 +120,16 @@ export function Datagrid({
                 </option>
 
                 {fieldsArray.map((field) => (
-                  <>
+                  <React.Fragment key={field.id}>
                     <option key={`${field.id}-asc`} value={`${field.id}-asc`}>
                       {field.name} {''}
                       (crescente)
                     </option>
                     <option key={`${field.id}-desc`} value={`${field.id}-desc`}>
-                      {field.name === 'CPFCNPJ' ? 'CPF/CNPJ' : field.name} {''}
+                      {field.name} {''}
                       (decrescente)
                     </option>
-                  </>
+                  </React.Fragment>
                 ))}
               </OrderSelection>
             </Box>
@@ -246,9 +251,8 @@ export function Datagrid({
           <DeleteData
             item={selectedItem}
             table={tableName}
-            onClose={() => {
-              handleCloseDelete(), onRefresh()
-            }}
+            onClose={handleCloseDelete}
+            onRefresh={onRefresh}
             firstField={fieldsArray[0]?.id}
           />
         </Box>

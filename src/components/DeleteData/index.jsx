@@ -10,13 +10,14 @@ import { useTheme } from 'styled-components'
 import { deleteDoc, doc } from 'firebase/firestore'
 import { db } from '../../services/firebaseConfig'
 
-export function DeleteData({ item, table, onClose, firstField }) {
+export function DeleteData({ item, table, onClose, firstField, onRefresh }) {
   const theme = useTheme()
 
   async function handleDelete() {
     if (!item?.id || !table) return
     await deleteDoc(doc(db, table, item.id))
     onClose()
+    onRefresh()
   }
 
   return (
