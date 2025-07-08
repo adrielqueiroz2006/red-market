@@ -46,6 +46,7 @@ Veja abaixo algumas imagens do projeto em funcionamento.
 - Cadastro de produtos
 - Cadastro de pedidos
 - Tabela de dados (CRUD)
+- Exportação de dados para PDF e Excel
 
 ## 🚀 Tecnologias Utilizadas
 
