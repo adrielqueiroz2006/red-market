@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 import { MainLayout } from '../../layouts/MainLayout'
 
 import { Datagrid } from '../../components/Datagrid'
@@ -7,36 +9,139 @@ import { Box } from '@mui/material'
 
 import { handleExport } from '../../utils/exportDatagrid'
 
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  serverTimestamp,
+  updateDoc,
+} from 'firebase/firestore'
+import { db } from '../../services/firebaseConfig'
+
+import { OrderForm } from './components/OrderForm'
+
 export function Orders() {
-  const table = 'Pedidos'
+  const page = 'Pedidos'
+
+  const [orders, setOrders] = useState([])
+  const ordersCollectionRef = collection(db, page)
 
   const fields = [
     {
-      name: 'Produtos',
-      collectionName: 'Produtos',
+      id: 'product',
+      name: 'Produto',
     },
     {
-      name: 'Clientes',
-      collectionName: 'Clientes',
+      id: 'customer',
+      name: 'Cliente',
     },
     {
+      id: 'amount',
       name: 'Quantidade',
-      icon: 'Hash',
-      text: 'Digite a quantidade',
     },
     {
+      id: 'value',
       name: 'Valor',
-      icon: 'MoneyWavy',
-      text: 'Digite telefone do cliente',
     },
   ]
 
+  async function getOrders() {
+    const q = query(ordersCollectionRef, orderBy('createdAt', 'desc'))
+    const data = await getDocs(q)
+
+    setOrders(
+      data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }))
+    )
+  }
+
+  async function handleAddOrder(
+    product,
+    productId,
+    customer,
+    customerId,
+    amount,
+    value
+  ) {
+    try {
+      const order = await addDoc(ordersCollectionRef, {
+        product,
+        productId,
+        customer,
+        customerId,
+        amount,
+        value,
+        createdAt: serverTimestamp(),
+      })
+
+      await getOrders()
+    } catch {
+      alert('Não foi possível adicionar o pedido')
+    }
+  }
+
+  async function handleEditOrder(
+    product,
+    productId,
+    customer,
+    customerId,
+    amount,
+    value,
+    id
+  ) {
+    try {
+      const orderDoc = doc(db, page, id)
+      await updateDoc(orderDoc, {
+        product,
+        productId,
+        customer,
+        customerId,
+        amount,
+        value,
+        id,
+      })
+
+      await getOrders()
+    } catch {
+      alert('Não foi possível editar o pedido')
+    }
+  }
+
+  useEffect(() => {
+    getOrders()
+  }, [])
+
   return (
     <MainLayout
-      selectedPage={table}
+      selectedPage={page}
       children={
         <>
-          <Datagrid tableName={'Pedidos'} fieldsArray={fields} />
+          <Datagrid
+            tableName={page}
+            fieldsArray={fields}
+            data={orders}
+            addNewData={(handleCloseAdd) => (
+              <OrderForm
+                option="save"
+                onClose={handleCloseAdd}
+                onAction={handleAddOrder}
+              />
+            )}
+            editData={(handleCloseEdit, selectedItem) => (
+              <OrderForm
+                option="edit"
+                onClose={handleCloseEdit}
+                onAction={handleEditOrder}
+                item={selectedItem}
+              />
+            )}
+            onRefresh={getOrders}
+          />
 
           <Box
             sx={{

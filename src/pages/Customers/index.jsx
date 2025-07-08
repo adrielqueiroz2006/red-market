@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 import { MainLayout } from '../../layouts/MainLayout'
 
 import { Datagrid } from '../../components/Datagrid'
@@ -7,38 +9,119 @@ import { Box } from '@mui/material'
 
 import { handleExport } from '../../utils/exportDatagrid'
 
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  serverTimestamp,
+  updateDoc,
+} from 'firebase/firestore'
+import { db } from '../../services/firebaseConfig'
+
+import { CustomerForm } from './components/CustomerForm'
+
 export function Customers() {
-  const table = 'Clientes'
+  const page = 'Clientes'
+
+  const [customers, setCustomers] = useState([])
+  const customersCollectionRef = collection(db, page)
 
   const fields = [
     {
+      id: 'name',
       name: 'Nome',
-      icon: 'User',
-      text: 'Digite nome do cliente',
     },
     {
-      name: 'CPFCNPJ',
-      icon: 'IdentificationCard',
-      text: 'Digite o CPF ou CNPJ do cliente',
+      id: 'register',
+      name: 'CPF/CNPJ',
     },
     {
+      id: 'address',
       name: 'Endereço',
-      icon: 'House',
-      text: 'Digite endereço do cliente',
     },
     {
+      id: 'phone',
       name: 'Telefone',
-      icon: 'Phone',
-      text: 'Digite telefone do cliente',
     },
   ]
 
+  async function getCustomers() {
+    const q = query(customersCollectionRef, orderBy('createdAt', 'desc'))
+    const data = await getDocs(q)
+
+    setCustomers(
+      data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }))
+    )
+  }
+
+  async function handleAddCustomer(name, register, address, phone) {
+    try {
+      const customer = await addDoc(customersCollectionRef, {
+        name,
+        register,
+        address,
+        phone,
+        createdAt: serverTimestamp(),
+      })
+
+      await getCustomers()
+    } catch {
+      alert('Não foi possível adicionar o cliente')
+    }
+  }
+
+  async function handleEditCustomer(name, register, address, phone, id) {
+    try {
+      const customerDoc = doc(db, page, id)
+      await updateDoc(customerDoc, {
+        name,
+        register,
+        address,
+        phone,
+      })
+
+      await getCustomers()
+    } catch {
+      alert('Não foi possível editar o cliente')
+    }
+  }
+
+  useEffect(() => {
+    getCustomers()
+  }, [])
+
   return (
     <MainLayout
-      selectedPage={table}
+      selectedPage={page}
       children={
         <>
-          <Datagrid tableName={table} fieldsArray={fields} />
+          <Datagrid
+            tableName={page}
+            fieldsArray={fields}
+            data={customers}
+            addNewData={(handleCloseAdd) => (
+              <CustomerForm
+                option="save"
+                onClose={handleCloseAdd}
+                onAction={handleAddCustomer}
+              />
+            )}
+            editData={(handleCloseEdit, selectedItem) => (
+              <CustomerForm
+                option="edit"
+                onClose={handleCloseEdit}
+                onAction={handleEditCustomer}
+                item={selectedItem}
+              />
+            )}
+            onRefresh={getCustomers}
+          />
 
           <Box
             sx={{
