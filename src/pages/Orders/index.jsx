@@ -155,13 +155,13 @@ export function Orders() {
               Icon="FilePdf"
               Text="Exportar PDF"
               Size={232}
-              onClick={() => handleExport(page, fields, 'pdf')}
+              onClick={() => handleExport(page, fields, 'pdf', orders)}
             />
             <Button
               Icon="MicrosoftExcelLogo"
               Text="Exportar Excel"
               Size={232}
-              onClick={() => handleExport(page, fields, 'excel')}
+              onClick={() => handleExport(page, fields, 'excel', orders)}
             />
           </Box>
         </>

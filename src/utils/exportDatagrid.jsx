@@ -1,23 +1,11 @@
-import { getFirestore, collection, getDocs } from 'firebase/firestore'
 import * as XLSX from 'xlsx'
+
 import { saveAs } from 'file-saver'
+
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 
-const db = getFirestore()
-
-async function fetchDataFromFirebase(tableName) {
-  const querySnapshot = await getDocs(collection(db, tableName))
-  const data = []
-  querySnapshot.forEach((doc) => {
-    data.push({ id: doc.id, ...doc.data() })
-  })
-  return data
-}
-
-export async function handleExport(tableName, fieldsArray, format) {
-  const rawData = await fetchDataFromFirebase(tableName)
-
+export async function handleExport(tableName, fieldsArray, format, rawData) {
   const columns = fieldsArray.map((field) => ({
     header: field.name,
     dataKey: field.name,
@@ -26,7 +14,7 @@ export async function handleExport(tableName, fieldsArray, format) {
   const data = rawData.map((item) => {
     const filteredItem = {}
     fieldsArray.forEach((field) => {
-      filteredItem[field.name] = item[field.name] ?? ''
+      filteredItem[field.name] = item[field.id] ?? ''
     })
     return filteredItem
   })
