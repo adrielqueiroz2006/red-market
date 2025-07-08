@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   GreetingsText,
@@ -32,8 +32,6 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from 'styled-components'
 
-import ProfilePic from '../../assets/profile.jpg'
-
 import { signOut } from 'firebase/auth'
 import { auth } from '../../services/firebaseConfig'
 
@@ -43,6 +41,8 @@ export function MainLayout({ children, selectedPage = 'Entrada' }) {
   const [openSidebar, setOpenSidebar] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
+
+  const [greetingsMessage, setGreetingsMessage] = useState('Boa tarde')
 
   const navigate = useNavigate()
   const theme = useTheme()
@@ -66,6 +66,19 @@ export function MainLayout({ children, selectedPage = 'Entrada' }) {
     signOut(auth)
   }
 
+  useEffect(() => {
+    const date = new Date()
+    const hours = date.getHours()
+
+    if (hours >= 5 && hours < 12) {
+      setGreetingsMessage('Bom dia')
+    } else if (hours >= 12 && hours < 18) {
+      setGreetingsMessage('Boa tarde')
+    } else {
+      setGreetingsMessage('Boa noite')
+    }
+  }, [])
+
   const sidebar = (
     <div
       style={{
@@ -80,7 +93,7 @@ export function MainLayout({ children, selectedPage = 'Entrada' }) {
           <ProfileWrapper>
             <Box>
               <IconContainer style={{ padding: '35px 0' }}>
-                <ProfilePicture src={ProfilePic} />
+                <ProfilePicture src={auth.currentUser.photoURL} />
               </IconContainer>
             </Box>
 
@@ -89,8 +102,8 @@ export function MainLayout({ children, selectedPage = 'Entrada' }) {
                 display: { sm: openSidebar ? 'block' : 'none' },
               }}
             >
-              <GreetingsText>Boa tarde, </GreetingsText>
-              <ProfileName>Adriel Queiroz</ProfileName>
+              <GreetingsText>{greetingsMessage}, </GreetingsText>
+              <ProfileName>{auth.currentUser.displayName}</ProfileName>
             </Box>
           </ProfileWrapper>
         </List>
