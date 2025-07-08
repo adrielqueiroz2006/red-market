@@ -10,7 +10,7 @@ import { useTheme } from 'styled-components'
 import { deleteDoc, doc } from 'firebase/firestore'
 import { db } from '../../services/firebaseConfig'
 
-export function DeleteData({ onClose, item, firstField, table }) {
+export function DeleteData({ item, table, onClose, firstField }) {
   const theme = useTheme()
 
   async function handleDelete() {

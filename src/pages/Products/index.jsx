@@ -49,7 +49,7 @@ export function Products() {
   ]
 
   async function getProducts() {
-    const q = query(productsCollectionRef, orderBy('createdAt', 'desc'))
+    const q = query(productsCollectionRef, orderBy('createdAt', 'asc'))
     const data = await getDocs(q)
 
     setProducts(
@@ -109,7 +109,7 @@ export function Products() {
               <ProductForm
                 option="save"
                 onClose={handleCloseAdd}
-                onSave={handleAddProduct}
+                onAction={handleAddProduct}
               />
             )}
             editData={(handleCloseEdit, selectedItem) => (

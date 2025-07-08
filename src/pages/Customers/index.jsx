@@ -49,7 +49,7 @@ export function Customers() {
   ]
 
   async function getCustomers() {
-    const q = query(customersCollectionRef, orderBy('createdAt', 'desc'))
+    const q = query(customersCollectionRef, orderBy('createdAt', 'asc'))
     const data = await getDocs(q)
 
     setCustomers(

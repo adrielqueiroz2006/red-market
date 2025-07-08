@@ -10,25 +10,28 @@ import { useTheme } from 'styled-components'
 
 import { ActionButton } from './components/ActionButton'
 
-import { AddNewData } from '../AddNewData'
 import { DeleteData } from '../DeleteData'
-import { EditData } from '../EditData'
-import { collection, getDocs, orderBy, query } from 'firebase/firestore'
-import { db } from '../../services/firebaseConfig'
 
-export function Datagrid({ fieldsArray, tableName }) {
-  const [open, setOpen] = useState(false)
+export function Datagrid({
+  tableName,
+  fieldsArray,
+  data,
+  addNewData,
+  editData,
+  onRefresh,
+}) {
+  const [openAdd, setOpenAdd] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
   const [openEdit, setOpenEdit] = useState(false)
 
-  const [data, setData] = useState([])
   const [selectedItem, setSelectedItem] = useState(null)
 
   const [sortField, setSortField] = useState('createdAt')
   const [sortDirection, setSortDirection] = useState('asc')
+  const [sortedData, setSortedData] = useState([])
 
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+  const handleOpenAdd = () => setOpenAdd(true)
+  const handleCloseAdd = () => setOpenAdd(false)
 
   const handleOpenDelete = (item) => {
     setSelectedItem(item)
@@ -48,24 +51,36 @@ export function Datagrid({ fieldsArray, tableName }) {
     setOpenEdit(false)
   }
 
+  const theme = useTheme()
+
   useEffect(() => {
-    async function fetchData() {
-      const colRef = collection(db, tableName)
+    if (!sortField || !data?.length) return
 
-      let q = query(colRef, orderBy(sortField, sortDirection))
+    const sorted = [...data].sort((a, b) => {
+      let valueA = a[sortField]
+      let valueB = b[sortField]
 
-      const snapshot = await getDocs(q)
-      const items = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }))
-      setData(items)
+      const aNum = parseFloat(valueA)
+      const bNum = parseFloat(valueB)
+
+      const aIsNum = !isNaN(aNum) && isFinite(aNum)
+      const bIsNum = !isNaN(bNum) && isFinite(bNum)
+
+      if (aIsNum && bIsNum) {
+        return aNum - bNum
+      }
+
+      return String(valueA).localeCompare(String(valueB), 'pt-BR', {
+        sensitivity: 'base',
+      })
+    })
+
+    if (sortDirection === 'desc') {
+      sorted.reverse()
     }
 
-    fetchData()
-  }, [tableName, open, openDelete, openEdit, sortField, sortDirection])
-
-  const theme = useTheme()
+    setSortedData(sorted)
+  }, [sortField, sortDirection, data])
 
   return (
     <>
@@ -80,7 +95,7 @@ export function Datagrid({ fieldsArray, tableName }) {
             sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}
           >
             <Box>
-              <Button onClick={handleOpen} />
+              <Button onClick={handleOpenAdd} />
             </Box>
 
             <Box>
@@ -101,17 +116,11 @@ export function Datagrid({ fieldsArray, tableName }) {
 
                 {fieldsArray.map((field) => (
                   <>
-                    <option
-                      key={`${field.name}-asc`}
-                      value={`${field.name}-asc`}
-                    >
-                      {field.name === 'CPFCNPJ' ? 'CPF/CNPJ' : field.name} {''}
+                    <option key={`${field.id}-asc`} value={`${field.id}-asc`}>
+                      {field.name} {''}
                       (crescente)
                     </option>
-                    <option
-                      key={`${field.name}-desc`}
-                      value={`${field.name}-desc`}
-                    >
+                    <option key={`${field.id}-desc`} value={`${field.id}-desc`}>
                       {field.name === 'CPFCNPJ' ? 'CPF/CNPJ' : field.name} {''}
                       (decrescente)
                     </option>
@@ -128,20 +137,12 @@ export function Datagrid({ fieldsArray, tableName }) {
               <tr>
                 <th></th>
                 {fieldsArray.map((field) => (
-                  <th key={field.name}>
-                    {field.name === 'CPFCNPJ'
-                      ? 'CPF/CNPJ'
-                      : field.name === 'Produtos'
-                      ? 'Produto'
-                      : field.name === 'Clientes'
-                      ? 'Cliente'
-                      : field.name}
-                  </th>
+                  <th key={field.name}>{field.name}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {data.map((item) => (
+              {sortedData.map((item) => (
                 <tr key={item.id}>
                   <td>
                     <div style={{ display: 'flex', gap: '10px' }}>
@@ -157,7 +158,11 @@ export function Datagrid({ fieldsArray, tableName }) {
                   </td>
 
                   {fieldsArray.map((field) => (
-                    <td key={field.name}>{item[field.name]}</td>
+                    <td key={field.id}>
+                      {field.id === 'price' || field.id === 'value'
+                        ? `R$ ${item[field.id]}`
+                        : item[field.id]}
+                    </td>
                   ))}
                 </tr>
               ))}
@@ -167,8 +172,8 @@ export function Datagrid({ fieldsArray, tableName }) {
       </Container>
 
       <Modal
-        open={open}
-        onClose={handleClose}
+        open={openAdd}
+        onClose={handleCloseAdd}
         style={{
           backdropFilter: 'blur(2px)',
           backgroundColor: 'rgb(0, 0, 0, 0.65)',
@@ -187,11 +192,7 @@ export function Datagrid({ fieldsArray, tableName }) {
             bgcolor: theme.white,
           }}
         >
-          <AddNewData
-            onClose={handleClose}
-            fields={fieldsArray}
-            table={tableName}
-          />
+          {addNewData(handleCloseAdd)}
         </Box>
       </Modal>
 
@@ -216,12 +217,7 @@ export function Datagrid({ fieldsArray, tableName }) {
             bgcolor: theme.white,
           }}
         >
-          <EditData
-            onClose={handleCloseEdit}
-            item={selectedItem}
-            fields={fieldsArray}
-            table={tableName}
-          />
+          {editData(handleCloseEdit, selectedItem)}
         </Box>
       </Modal>
 
@@ -248,10 +244,12 @@ export function Datagrid({ fieldsArray, tableName }) {
           }}
         >
           <DeleteData
-            onClose={handleCloseDelete}
             item={selectedItem}
-            firstField={fieldsArray[0]?.name}
             table={tableName}
+            onClose={() => {
+              handleCloseDelete(), onRefresh()
+            }}
+            firstField={fieldsArray[0]?.id}
           />
         </Box>
       </Modal>
