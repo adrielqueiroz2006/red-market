@@ -7,18 +7,19 @@ import { LoginForm } from './components/LoginForm'
 
 import { Container } from './styles'
 
-import { auth } from '../../services/firebaseConfig'
-
 import { useNavigate } from 'react-router-dom'
+
+import { useAuth } from '../../contexts/AuthContext'
 
 export function Login() {
   const navigate = useNavigate()
+  const { user, loading } = useAuth()
 
   useEffect(() => {
-    if (auth) {
+    if (!loading && user) {
       navigate('/home')
     }
-  }, [])
+  }, [user, loading, navigate])
 
   return (
     <Container>
